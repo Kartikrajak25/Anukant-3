@@ -1,0 +1,31 @@
+# Query: 3rd P.py
+# ContextLines: 1
+
+No Resuimport pandas as pd
+import matplotlib.pyplot as plt
+
+# 1. Load data
+df = pd.read_csv("world_health_indicators.csv")
+
+# Ensure 'Year' is of int type
+df['Year'] = df['Year'].astype(int)
+
+# 2. Filter for diabetes prevalence (% of male adults)
+diab = df[df['IndicatorName'] == 'Diabetes prevalence (% of male adults)']
+
+# 3. Pivot to show years as columns and countries as rows
+latest = diab.pivot(index='CountryName', columns='Year', values='Value')
+
+# 4. Get latest year available
+latest_year = latest.columns.max()
+
+# 5. Sort and get top 10 countries
+top10 = latest.sort_values(by=latest_year, ascending=False).head(10)
+
+# 6. Plot
+top10[latest_year].plot(kind='barh', figsize=(8, 6), color='skyblue')
+plt.xlabel('Diabetes Prevalence (%)')
+plt.title(f"Top 10 Countries by Diabetes Prevalence in {latest_year}")
+plt.gca().invert_yaxis()  # Optional: highest at top
+plt.tight_layout()
+plt.show()lts
